@@ -2,7 +2,7 @@ import joblib
 import os
 import shutil
 from datetime import datetime
-from pipeline.configloader import load_config
+from .configloader import load_config
 
     
 config = load_config()

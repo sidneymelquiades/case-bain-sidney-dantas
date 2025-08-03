@@ -2,7 +2,7 @@ import yaml
 from fastapi import HTTPException
 
 
-def load_api_keys(path="app/security/api_keys.yaml"):
+def load_api_keys(path="security/api_keys.yaml"):
     with open(path, "r") as f:
         data = yaml.safe_load(f)
         return set(entry["key"] for entry in data["api_keys"])

@@ -1,16 +1,16 @@
 from fastapi import FastAPI, Depends, HTTPException, Header, UploadFile, File
-from app.model import predict_price
-from app.schemas import PropertyInput, PredictionOutput
-from app.auth import verify_api_key
-from app.logger import get_logger
-from pipeline.train import train_model
-from pipeline.configloader import load_config
+from .model import predict_price
+from .schemas import PropertyInput, PredictionOutput
+from .auth import verify_api_key
+from .logger import get_logger
+from .pipeline.train import train_model
+from .pipeline.configloader import load_config
 import os
 import shutil
 from pathlib import Path
 
 config = load_config()
-description = Path("README.md").read_text(encoding="utf-8")
+description = Path(__file__).resolve().parents[1].joinpath("README.md").read_text(encoding="utf-8")
 app = FastAPI(title="Case Bain and Company",
     description=description,
     version="1.0.0",
@@ -63,3 +63,6 @@ def retrain_model(
     except Exception as e:
         logger.error(f"Erro ao re-treinar modelo: {e}")
         raise HTTPException(status_code=500, detail="Erro ao re-treinar modelo.")
+    
+if __name__=="__main__":
+    app.run

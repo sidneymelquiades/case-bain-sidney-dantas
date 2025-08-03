@@ -8,8 +8,8 @@ from category_encoders import TargetEncoder
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import GradientBoostingRegressor
-from pipeline.utils import save_model, move_model_file
-from pipeline.configloader import load_config
+from .utils import save_model, move_model_file
+from .configloader import load_config
 
     
 config = load_config()
