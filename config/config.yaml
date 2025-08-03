@@ -1,0 +1,12 @@
+paths:
+  
+  train_data: "./data/train.csv"
+  test_data: "./data/test.csv"
+  data_main: "./data/"
+  model_output: "./models/latest/final_model.joblib"
+  versions: "./models/others/"
+
+training:
+  test_size: 0.2
+  random_state: 42
+  target_column: price
