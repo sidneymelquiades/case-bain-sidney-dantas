@@ -1,57 +1,57 @@
+# Predict Chilean Property Price API - Bain & Company Case
 
-#  Predict Chilean Property Price API - Bain & Company Case
+## Author: Sidney Dantas
 
-# Autor Sidney Dantas
+This API was developed as a solution for a case proposed by **Bain & Company**, with the objective of predicting the price of real estate — houses and apartments — in the metropolitan region of Santiago, Chile, based on physical characteristics and geographic location.
 
-Esta API foi desenvolvida como solução para um case proposto pela Bain & Company, com o objetivo de prever o preço de imóveis — casas e departamentos — na região metropolitana de Santiago, no Chile, com base em características físicas e na localização geográfica.
-
-A proposta foi resolvida de forma prática, adotando uma abordagem simples e introdutória. No entanto, é importante destacar que, para uma aplicação em um cenário real, seriam necessárias diversas melhorias e aprimoramentos na arquitetura e nos processos envolvidos.
-
+The solution was implemented in a practical manner, adopting a simple and introductory approach. However, it is important to note that for use in a real-world scenario, several architectural and process improvements would be necessary.
 
 ---
 
-## Objetivo
+## Objective
 
-Receber informações sobre um imóvel (como tipo, setor, área, número de cômodos, latitude e longitude) e retornar uma previsão de preço com base em um modelo de machine learning previamente treinado.
+Receive information about a property (such as type, sector, area, number of rooms, latitude, and longitude) and return a price prediction based on a pre-trained machine learning model.
 
 ---
 
-##  Como executar a API
+## How to run the API
 
-### Pré-requisitos
+### Prerequisites
 
-- Python 3.9 ou superior
-- Docker 
+- Python 3.9 or higher  
+- Docker  
 
-### 1. Clone o repositório
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/sidneymelquiades/case-bain-sidney-dantas.git
 cd case-bain-sidney-dantas
 ```
 
-### 2. build a aplicação
+### 2. Build the application
 
 ```bash
 docker build -t case-bain .
 ```
 
-### 3. Rode a aplicação via docker
+### 3. Run the application via Docker
 
 ```bash
-docker run -p 8000:8000 minha-api-fastapi
-
+docker run -p 8000:8000 case-bain
 ```
-##  Autenticação
 
-Para utilizar os endpoints da API, é necessário enviar uma `API Key` válida no header da requisição:
+---
+
+## Authentication
+
+To use the API endpoints, a valid `API Key` must be provided in the request header:
 
 ```
 Key: api_key
 Value: supersecretkey
 ```
 
-Chaves disponíveis (definidas via arquivo `config.yaml`):
+Available keys (defined via the `config.yaml` file):
 
 ```yaml
 api_keys:
@@ -61,7 +61,7 @@ api_keys:
 
 ---
 
-##  Input - Esquema `PropertyInput`
+## Input - `PropertyInput` Schema
 
 ```json
 {
@@ -76,22 +76,26 @@ api_keys:
 }
 ```
 
-###  Validações e Premissas:
+### Validations and Assumptions
 
-Algumas premissas foram adotadas com o objetivo de garantir um grau mínimo de confiabilidade nas previsões geradas pelo modelo. São elas:
+Certain assumptions were adopted to ensure a minimum level of reliability in the model's predictions. They are:
 
-A variável type deve conter apenas os valores "departamento" ou "casa", restringindo a análise a esses dois tipos de imóvel(conforme arquivo transmitido). A variável sector deve corresponder a um dos seguintes bairros: Vitacura, La Reina, Las Condes, Lo Barnechea, Providencia ou Ñuñoa, garantindo assim que o modelo trabalhe apenas com regiões bem definidas dentro do escopo do projeto. As variáveis net_usable_area e net_area, que representam áreas úteis e totais do imóvel, respectivamente, devem possuir valores maiores que zero, evitando registros inconsistentes ou inválidos. A variável latitude deve estar compreendida entre -34 e -30, enquanto a variável longitude deve estar entre -73 e -68, limitando os dados a uma faixa geográfica coerente com a área urbana considerada para o estudo.
+The `type` field must contain only the values "departamento" or "casa", limiting the analysis to these two property types (as defined in the provided dataset).  
+The `sector` field must match one of the following neighborhoods: Vitacura, La Reina, Las Condes, Lo Barnechea, Providencia, or Ñuñoa — ensuring the model only works with well-defined regions within the project scope.  
+The `net_usable_area` and `net_area` fields, representing the usable and total property areas respectively, must be greater than zero to avoid invalid or inconsistent records.  
+The `latitude` must be between -34 and -30.  
+The `longitude` must be between -73 and -68, restricting the data to a coherent urban geographic range.
 
-- `type`: apenas "departamento" ou "casa"
-- `sector`: um dos seguintes bairros:
+- `type`: only "departamento" or "casa"
+- `sector`: one of the following neighborhoods:
   - vitacura, la reina, las condes, lo barnechea, providencia, nunoa
-- `net_usable_area` e `net_area`: devem ser > 0
-- `latitude`: entre -34 e -30
-- `longitude`: entre -73 e -68
+- `net_usable_area` and `net_area`: must be > 0
+- `latitude`: between -34 and -30
+- `longitude`: between -73 and -68
 
 ---
 
-##  Output - Esquema `PredictionOutput`
+## Output - `PredictionOutput` Schema
 
 ```json
 {
@@ -101,44 +105,39 @@ A variável type deve conter apenas os valores "departamento" ou "casa", restrin
 
 ---
 
-##  Documentação Swagger
+## Swagger Documentation
 
-Acesse a interface interativa da API:
+Access the interactive API interface:
 
 - [http://localhost:8000/docs](http://localhost:8000/docs)
 
 ---
 
-##  Modelo de Machine Learning
+## Machine Learning Model
 
+The model was trained using a pipeline composed of the following steps:
 
+First, data preprocessing is performed, which includes encoding categorical variables and cleaning the data to ensure quality and consistency.
 
-O modelo foi treinado utilizando um pipeline que é composto pelas seguintes etapas:
+Next, a Gradient Boosting regressor is applied — a machine learning algorithm for regression that combines multiple weak learners to form a strong predictive model.
 
-Primeiramente, realiza-se o pré-processamento dos dados, que inclui a codificação das variáveis categóricas e a limpeza dos dados para garantir a qualidade e consistência das informações.
+To evaluate model performance, metrics such as Root Mean Squared Error (RMSE), Mean Absolute Error (MAE), and Mean Absolute Percentage Error (MAPE) are used to assess the accuracy and quality of the predictions.
 
-Em seguida, é aplicado um regressor do tipo Gradient Boosting, que é um algoritmo de aprendizado de máquina utilizado para regressão, baseado na combinação de múltiplos modelos fracos para formar um modelo forte.
-
-Para avaliar o desempenho do modelo, são utilizadas métricas como o Erro Quadrático Médio (RMSE), o Erro Médio Absoluto (MAE) e o Erro Percentual Absoluto Médio (MAPE), que permitem medir a precisão e a qualidade das previsões geradas.
-
-Todo esse processo está organizado em scripts localizados no arquivo `pipeline/train.py` e configurados por meio do arquivo de configuração `pipeline/config.yaml`.
-
+This entire process is organized in scripts located at `pipeline/train.py` and configured through the `pipeline/config.yaml` file.
 
 ---
 
+## Future Improvements
+
+While the case required a simple and introductory solution, it would be highly advisable to evolve the project’s architecture by incorporating a CI/CD pipeline using tools such as Jenkins and Spinnaker. This would allow the model retraining process to be performed in a less bureaucratic and more efficient manner.
 
 ---
 
-##  Futuras Evoluções
+## Author
 
-O case previa uma solução simples e introdutória, porém seria bastante recomendável evoluir a arquitetura do projeto, incorporando uma esteira de CI/CD utilizando ferramentas como Jenkins e Spinnaker, por exemplo. Isso permitiria que o retreinamento da aplicação fosse realizado de forma menos burocrática e mais eficiente
----
-
-##  Autor
-
-- **Sidney Melquiades Dantas**
-- [sidneymelquiadesdantas@gmail.com](mailto:sidneymelquiadesdantas@gmail.com)
-- [github.com/sidneymelquiades](https://github.com/sidneymelquiades)
-- [Linkedin](https://www.linkedin.com/in/sidneymelquiadedantas/)
+- **Sidney Melquiades Dantas**  
+- [sidneymelquiadesdantas@gmail.com](mailto:sidneymelquiadesdantas@gmail.com)  
+- [github.com/sidneymelquiades](https://github.com/sidneymelquiades)  
+- [LinkedIn](https://www.linkedin.com/in/sidneymelquiadedantas/)
 
 ---
