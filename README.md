@@ -139,5 +139,6 @@ O case previa uma solução simples e introdutória, porém seria bastante recom
 - **Sidney Melquiades Dantas**
 - [sidneymelquiadesdantas@gmail.com](mailto:sidneymelquiadesdantas@gmail.com)
 - [github.com/sidneymelquiades](https://github.com/sidneymelquiades)
+- [Linkedin](https://www.linkedin.com/in/sidneymelquiadedantas/)
 
 ---
