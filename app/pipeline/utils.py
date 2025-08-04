@@ -18,13 +18,4 @@ def save_model(model):
 def load_model():
     return joblib.load(MODEL_PATH)
 
-def move_model_file():
-    
 
-    # Verificações
-    if not os.path.exists(MODEL_PATH):
-        raise FileNotFoundError(f"Modelo não encontrado em: {MODEL_PATH}")
-
-    # Copiar ou mover
-    shutil.move(MODEL_PATH, MODEL_PATH_VERSION)
-    print(f"Modelo movido para: {MODEL_PATH_VERSION}")

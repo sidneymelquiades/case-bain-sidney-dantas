@@ -1,12 +1,8 @@
-from fastapi import FastAPI, Depends, HTTPException, Header, UploadFile, File
+from fastapi import FastAPI, HTTPException, Header
 from .model import predict_price
 from .schemas import PropertyInput, PredictionOutput
-from .auth import verify_api_key
 from .logger import get_logger
-from .pipeline.train import train_model
 from .pipeline.configloader import load_config
-import os
-import shutil
 from pathlib import Path
 
 config = load_config()
@@ -35,34 +31,4 @@ def predict(data: PropertyInput, api_key: str = Header(...)):
         logger.error(f"Error in prediction: {e}")
         raise HTTPException(status_code=500, detail="Prediction failed")
 
-@app.post("/retrain")
-def retrain_model(
-    train_file: UploadFile = File(...),
-    test_file: UploadFile = File(...),
-    api_key: str = Header(...)
-):
-    verify_api_key(api_key)
 
-    try:
-        train_path = os.path.join(DATA_PATH, "train.csv")
-        test_path = os.path.join(DATA_PATH, "test.csv")
-
-        # Salva os arquivos recebidos
-        with open(train_path, "wb") as f:
-            shutil.copyfileobj(train_file.file, f)
-
-        with open(test_path, "wb") as f:
-            shutil.copyfileobj(test_file.file, f)
-
-        # Executa o retrain
-        train_model()
-
-        logger.info("Modelo re-treinado com sucesso.")
-        return {"detail": "Modelo re-treinado com sucesso."}
-
-    except Exception as e:
-        logger.error(f"Erro ao re-treinar modelo: {e}")
-        raise HTTPException(status_code=500, detail="Erro ao re-treinar modelo.")
-    
-if __name__=="__main__":
-    app.run

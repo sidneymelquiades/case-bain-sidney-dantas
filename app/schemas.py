@@ -41,5 +41,3 @@ class PropertyInput(BaseModel):
 class PredictionOutput(BaseModel):
     price: float
 
-
-    
